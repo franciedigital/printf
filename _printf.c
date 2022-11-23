@@ -1,6 +1,8 @@
 #include "main.h"
 
 int print_str(char *);
+void print_number(int n);
+int count_numbers(int n);
 
 /**
  *  * _printf - a function that produces output according to a format
@@ -11,7 +13,7 @@ int print_str(char *);
 int _printf(const char *format, ...)
 {
 	va_list list;
-	int i, count = 0;
+	int i, count = 0, num;
 	char *str;
 
 	if (!format)
@@ -33,6 +35,11 @@ int _printf(const char *format, ...)
 					break;
 				case '%':
 					_putchar('%'), i++, count++;
+					break;
+				case 'd': case 'i':
+					num = va_arg(list, int);
+					print_number(num);
+					count += count_numbers(num), i++;
 					break;
 				default:
 					_putchar('%'), count++;
@@ -63,5 +70,56 @@ int print_str(char *s)
 	{
 		_putchar(s[i]);
 	}
+	return (i);
+}
+
+/**
+ *  * print_number - prints an integer
+ *   * @n: the integer to print
+ *    * Return: void
+ */
+void print_number(int n)
+{
+	unsigned int num = n;
+
+	if (n < 0)
+	{
+		_putchar('-');
+		num = -num;
+	}
+
+	if ((num / 10) > 0)
+	{
+		print_number(num / 10);
+	}
+
+	_putchar((num % 10) + '0');
+}
+
+/**
+ *  * count_numbers - counts numbers
+ *   * @n: the number
+ *    *
+ *     * Return: count
+ */
+int count_numbers(int n)
+{
+	int i = 0, num = n;
+
+	if (n == 0)
+		return (1);
+
+	if (n < 0)
+	{
+		i++;
+		num *= -1;
+	}
+
+	while (num != 0)
+	{
+		i++;
+		num /= 10;
+	}
+
 	return (i);
 }
