@@ -1,22 +1,25 @@
 #include "main.h"
 
-int print_str(char *);
-void print_number(int n);
-int count_numbers(int n);
-
 /**
- *  * _printf - a function that produces output according to a format
- *   * @format: a character string
+ *  * _printf - a function that produces
+ *  output according to a format and argument
+ *   * @format: string containing the regular
+ *   chars and format specifiers to print
  *    *
- *     * Return: the number of characters printed
+ *     * Return: the total number of characters printed
  */
 int _printf(const char *format, ...)
 {
+	/* Declare a variable list, with its own argument(begins at va_start) */
 	va_list list;
-	int i, count = 0, num;
-	char *str;
+	int i = 0, count = 0;
+	/* a function pointer, that accepts va_list as argument */
+	int (*ptr_func)(va_list);
 
-	if (!format)
+	/* Returns -1 if format is null */
+	if (!format || (format[i] == '%' && format[i + 1] == '\0'))
+		return (-1);
+	if (!format[i])
 		return (0);
 
 	va_start(list, format);
@@ -24,102 +27,26 @@ int _printf(const char *format, ...)
 	{
 		if (format[i] == '%')
 		{
-			switch (format[i + 1])
+			if (format[i + 1] == '\0')
+				return (-1);
+
+			ptr_func = get_func(format, i + 1);
+			if (ptr_func == NULL)
 			{
-				case 'c':
-					_putchar(va_arg(list, int)), i++, count++;
-					break;
-				case 's':
-					str = va_arg(list, char *);
-					count += print_str(str), i++;
-					break;
-				case '%':
-					_putchar('%'), i++, count++;
-					break;
-				case 'd': case 'i':
-					num = va_arg(list, int);
-					print_number(num);
-					count += count_numbers(num), i++;
-					break;
-				default:
-					_putchar('%'), count++;
-					break;
+				_putchar('%');
+				count++;
 			}
-			continue;
+			else
+			{
+				count += ptr_func(list);
+				i++;
+			}
 		}
-		_putchar(format[i]);
-		count++;
+		else
+		{
+			_putchar(format[i]);
+			count++;
+		}
 	}
 	return (count);
-}
-
-/**
- *  * print_str - prints a string
- *   * @s: string to print
- *    *
- *     * Return: void
- */
-int print_str(char *s)
-{
-	int i;
-
-	if (!s)
-		return (0);
-
-	for (i = 0; s[i] != '\0'; i++)
-	{
-		_putchar(s[i]);
-	}
-	return (i);
-}
-
-/**
- *  * print_number - prints an integer
- *   * @n: the integer to print
- *    * Return: void
- */
-void print_number(int n)
-{
-	unsigned int num = n;
-
-	if (n < 0)
-	{
-		_putchar('-');
-		num = -num;
-	}
-
-	if ((num / 10) > 0)
-	{
-		print_number(num / 10);
-	}
-
-	_putchar((num % 10) + '0');
-}
-
-/**
- *  * count_numbers - counts numbers
- *   * @n: the number
- *    *
- *     * Return: count
- */
-int count_numbers(int n)
-{
-	int i = 0, num = n;
-
-	if (n == 0)
-		return (1);
-
-	if (n < 0)
-	{
-		i++;
-		num *= -1;
-	}
-
-	while (num != 0)
-	{
-		i++;
-		num /= 10;
-	}
-
-	return (i);
 }
