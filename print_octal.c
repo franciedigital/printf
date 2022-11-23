@@ -1,26 +1,26 @@
 #include "main.h"
 
 /**
- *  * print_bin - prints a num in binary format
+ *  * print_octal - prints a num in octal format
  *   * @args: arguments
  *    *
  *     * Return: count
  */
-int print_bin(va_list args)
+int print_octal(va_list args)
 {
-	unsigned int p, num, bin[100];
+	unsigned int p, num, oct[100];
 	int r;
 
 	num = va_arg(args, unsigned int);
 
 	for (p = 0; num != 0; p++)
 	{
-		bin[p] = num % 2;
-		num /= 2;
+		oct[p] = num % 8;
+		num /= 8;
 	}
 
 	for (r = p - 1; r >= 0; r--)
-		_putchar(bin[r] + '0');
+		_putchar(oct[r] + '0');
 
 	return (p);
 }
